@@ -157,7 +157,13 @@ const createBulkProducts = asyncHandler(async (req, res) => {
 // @route   GET /api/management/categories
 // @access  Private
 const getAllCategories = asyncHandler(async (req, res) => {
-  const categories = await Product.distinct('category');
+  const categories = await Category.find().select('name description parentCategory image isActive');
+  
+  if (!categories) {
+    res.status(404);
+    throw new Error('Kategoriler bulunamadı');
+  }
+
   res.json(categories);
 });
 
