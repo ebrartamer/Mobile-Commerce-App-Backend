@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const User = require('../models/User');
 const Product = require('../models/Product');
+const mongoose = require('mongoose');
 
 // @desc    Favori ürünleri getir
 // @route   GET /api/favorites
@@ -27,7 +28,11 @@ const addToFavorites = asyncHandler(async (req, res) => {
     throw new Error('Ürün ID\'si gerekli');
   }
   
-  // Ürünü kontrol et
+  if (!mongoose.Types.ObjectId.isValid(productId)) {
+    res.status(400);
+    throw new Error('Geçersiz ürün ID formatı');
+  }
+  
   const product = await Product.findById(productId);
   if (!product) {
     res.status(404);
@@ -35,57 +40,86 @@ const addToFavorites = asyncHandler(async (req, res) => {
   }
   
   const user = await User.findById(req.user._id);
+  if (!user) {
+    res.status(404);
+    throw new Error('Kullanıcı bulunamadı');
+  }
   
-  // Ürün zaten favorilerde mi kontrol et
   if (user.favorites.includes(productId)) {
     res.status(400);
     throw new Error('Ürün zaten favorilerinizde');
   }
   
-  // Favorilere ekle
   user.favorites.push(productId);
   await user.save();
   
-  res.status(201).json({ message: 'Ürün favorilere eklendi', favorites: user.favorites });
+  res.status(201).json({ 
+    success: true,
+    message: 'Ürün favorilere eklendi', 
+    favorites: user.favorites 
+  });
 });
 
 // @desc    Ürünü favorilerden çıkar
 // @route   DELETE /api/favorites/:productId
 // @access  Private
 const removeFromFavorites = asyncHandler(async (req, res) => {
-  const productId = req.params.productId;
+  const { productId } = req.params;
+  
+  if (!mongoose.Types.ObjectId.isValid(productId)) {
+    res.status(400);
+    throw new Error('Geçersiz ürün ID formatı');
+  }
   
   const user = await User.findById(req.user._id);
+  if (!user) {
+    res.status(404);
+    throw new Error('Kullanıcı bulunamadı');
+  }
   
-  // Ürün favorilerde mi kontrol et
   if (!user.favorites.includes(productId)) {
     res.status(400);
     throw new Error('Ürün favorilerinizde değil');
   }
   
-  // Favorilerden çıkar
   user.favorites = user.favorites.filter(
     (favorite) => favorite.toString() !== productId
   );
   
   await user.save();
   
-  res.json({ message: 'Ürün favorilerden çıkarıldı', favorites: user.favorites });
+  res.json({ 
+    success: true,
+    message: 'Ürün favorilerden çıkarıldı', 
+    favorites: user.favorites 
+  });
 });
 
 // @desc    Ürünün favori durumunu kontrol et
 // @route   GET /api/favorites/:productId/check
 // @access  Private
 const checkFavoriteStatus = asyncHandler(async (req, res) => {
-  const productId = req.params.productId;
+  const { productId } = req.params;
+  
+  if (!mongoose.Types.ObjectId.isValid(productId)) {
+    res.status(400);
+    throw new Error('Geçersiz ürün ID formatı');
+  }
   
   const user = await User.findById(req.user._id);
+  if (!user) {
+    res.status(404);
+    throw new Error('Kullanıcı bulunamadı');
+  }
   
   const isFavorite = user.favorites.some(
     (favorite) => favorite.toString() === productId
   );
   
-  res.json({ isFavorite });
+  res.json({ 
+    success: true,
+    isFavorite 
+  });
 });
 
 module.exports = {
