@@ -1,0 +1,57 @@
+{
+	"id": "f5e8d9a2-3b7c-4f5e-8d9a-2b3c7f5e8d9a",
+	"name": "Trendyol Clone API Environment",
+	"values": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "accessToken",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "refreshToken",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "addressId",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "productId",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "category",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "cartItemId",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "orderId",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2023-03-10T12:00:00.000Z",
+	"_postman_exported_using": "Postman/10.13.0"
+} 

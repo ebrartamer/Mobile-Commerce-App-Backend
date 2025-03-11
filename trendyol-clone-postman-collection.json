@@ -1,0 +1,1203 @@
+{
+	"info": {
+		"_postman_id": "e5f8d9a2-3b7c-4f5e-8d9a-2b3c7f5e8d9a",
+		"name": "Trendyol Clone API",
+		"description": "Trendyol Clone mobil uygulaması için API koleksiyonu",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Kullanıcı İşlemleri",
+			"item": [
+				{
+					"name": "Kullanıcı Kaydı",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test Kullanıcı\",\n    \"email\": \"test@example.com\",\n    \"password\": \"123456\",\n    \"phoneNumber\": \"5551234567\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"register"
+							]
+						},
+						"description": "Yeni bir kullanıcı kaydı oluşturur. Kayıt işleminden sonra kullanıcı bilgileri döner, token almak için ayrıca giriş yapılması gerekir."
+					},
+					"response": []
+				},
+				{
+					"name": "Kullanıcı Girişi",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"accessToken\", jsonData.accessToken);",
+									"pm.environment.set(\"refreshToken\", jsonData.refreshToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"login"
+							]
+						},
+						"description": "Kullanıcı girişi yapar ve token alır"
+					},
+					"response": []
+				},
+				{
+					"name": "Token Yenileme",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"accessToken\", jsonData.accessToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/refresh",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"refresh"
+							]
+						},
+						"description": "Refresh token kullanarak yeni bir access token alır"
+					},
+					"response": []
+				},
+				{
+					"name": "Kullanıcı Çıkışı",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"logout"
+							]
+						},
+						"description": "Kullanıcı çıkışı yapar ve refresh token'ı siler"
+					},
+					"response": []
+				},
+				{
+					"name": "Kullanıcı Profili Görüntüleme",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"profile"
+							]
+						},
+						"description": "Kullanıcı profilini görüntüler"
+					},
+					"response": []
+				},
+				{
+					"name": "Kullanıcı Profili Güncelleme",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Güncellenmiş İsim\",\n    \"phoneNumber\": \"5559876543\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"profile"
+							]
+						},
+						"description": "Kullanıcı profilini günceller"
+					},
+					"response": []
+				}
+			],
+			"description": "Kullanıcı kaydı, girişi, profil yönetimi gibi işlemler"
+		},
+		{
+			"name": "Adres İşlemleri",
+			"item": [
+				{
+					"name": "Adres Ekleme",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Ev\",\n    \"fullName\": \"Test Kullanıcı\",\n    \"phoneNumber\": \"5551234567\",\n    \"province\": \"İstanbul\",\n    \"district\": \"Kadıköy\",\n    \"neighborhood\": \"Caferağa\",\n    \"fullAddress\": \"Örnek Sokak No:1 D:5\",\n    \"isDefault\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/address",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"address"
+							]
+						},
+						"description": "Kullanıcıya yeni bir adres ekler"
+					},
+					"response": []
+				},
+				{
+					"name": "Adres Güncelleme",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"İş\",\n    \"fullName\": \"Test Kullanıcı\",\n    \"phoneNumber\": \"5551234567\",\n    \"province\": \"İstanbul\",\n    \"district\": \"Beşiktaş\",\n    \"neighborhood\": \"Levent\",\n    \"fullAddress\": \"İş Merkezi No:10 Kat:5\",\n    \"isDefault\": false\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/address/{{addressId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"address",
+								"{{addressId}}"
+							]
+						},
+						"description": "Var olan bir adresi günceller"
+					},
+					"response": []
+				},
+				{
+					"name": "Adres Silme",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/address/{{addressId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"address",
+								"{{addressId}}"
+							]
+						},
+						"description": "Bir adresi siler"
+					},
+					"response": []
+				}
+			],
+			"description": "Kullanıcı adreslerini yönetme işlemleri"
+		},
+		{
+			"name": "Ürün İşlemleri",
+			"item": [
+				{
+					"name": "Ürünleri Listeleme",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products?page=1&keyword=&category=&brand=&minPrice=&maxPrice=&sort=newest",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "keyword",
+									"value": ""
+								},
+								{
+									"key": "category",
+									"value": ""
+								},
+								{
+									"key": "brand",
+									"value": ""
+								},
+								{
+									"key": "minPrice",
+									"value": ""
+								},
+								{
+									"key": "maxPrice",
+									"value": ""
+								},
+								{
+									"key": "sort",
+									"value": "newest",
+									"description": "newest, price-asc, price-desc, rating-desc"
+								}
+							]
+						},
+						"description": "Ürünleri listeler. Filtreleme ve sıralama seçenekleri sunar."
+					},
+					"response": []
+				},
+				{
+					"name": "Ürün Detayı",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products/{{productId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"{{productId}}"
+							]
+						},
+						"description": "Belirli bir ürünün detaylarını getirir"
+					},
+					"response": []
+				},
+				{
+					"name": "Öne Çıkan Ürünler",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products/featured?limit=8",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"featured"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "8"
+								}
+							]
+						},
+						"description": "Öne çıkan ürünleri listeler"
+					},
+					"response": []
+				},
+				{
+					"name": "Kategorileri Listeleme",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"categories"
+							]
+						},
+						"description": "Tüm kategorileri listeler"
+					},
+					"response": []
+				},
+				{
+					"name": "Markaları Listeleme",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products/brands",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"brands"
+							]
+						},
+						"description": "Tüm markaları listeler"
+					},
+					"response": []
+				},
+				{
+					"name": "Kategoriye Göre Ürünler",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products/category/{{category}}?page=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"category",
+								"{{category}}"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Belirli bir kategorideki ürünleri listeler"
+					},
+					"response": []
+				},
+				{
+					"name": "Ürün Değerlendirmesi Ekleme",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"rating\": 5,\n    \"comment\": \"Harika bir ürün, çok memnun kaldım!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/products/{{productId}}/reviews",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"{{productId}}",
+								"reviews"
+							]
+						},
+						"description": "Bir ürüne değerlendirme ekler"
+					},
+					"response": []
+				}
+			],
+			"description": "Ürün listeleme, detay görüntüleme ve değerlendirme işlemleri"
+		},
+		{
+			"name": "Sepet İşlemleri",
+			"item": [
+				{
+					"name": "Sepeti Görüntüleme",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/cart",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cart"
+							]
+						},
+						"description": "Kullanıcının sepetini görüntüler"
+					},
+					"response": []
+				},
+				{
+					"name": "Sepete Ürün Ekleme",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productId\": \"{{productId}}\",\n    \"quantity\": 1,\n    \"color\": \"Siyah\",\n    \"size\": \"M\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/cart",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cart"
+							]
+						},
+						"description": "Sepete ürün ekler"
+					},
+					"response": []
+				},
+				{
+					"name": "Sepetteki Ürünü Güncelleme",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"quantity\": 2\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/cart/{{cartItemId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"{{cartItemId}}"
+							]
+						},
+						"description": "Sepetteki bir ürünün miktarını günceller"
+					},
+					"response": []
+				},
+				{
+					"name": "Sepetten Ürün Çıkarma",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/cart/{{cartItemId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"{{cartItemId}}"
+							]
+						},
+						"description": "Sepetten bir ürünü çıkarır"
+					},
+					"response": []
+				},
+				{
+					"name": "Sepeti Temizleme",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/cart",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"cart"
+							]
+						},
+						"description": "Sepetteki tüm ürünleri temizler"
+					},
+					"response": []
+				}
+			],
+			"description": "Sepet işlemleri: ürün ekleme, çıkarma, güncelleme ve görüntüleme"
+		},
+		{
+			"name": "Sipariş İşlemleri",
+			"item": [
+				{
+					"name": "Sipariş Oluşturma",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"orderId\", jsonData._id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"shippingAddress\": {\n        \"fullName\": \"Test Kullanıcı\",\n        \"phoneNumber\": \"5551234567\",\n        \"province\": \"İstanbul\",\n        \"district\": \"Kadıköy\",\n        \"neighborhood\": \"Caferağa\",\n        \"fullAddress\": \"Örnek Sokak No:1 D:5\"\n    },\n    \"paymentMethod\": \"Kapıda Ödeme\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/orders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						},
+						"description": "Yeni bir sipariş oluşturur"
+					},
+					"response": []
+				},
+				{
+					"name": "Siparişleri Listeleme",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/orders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						},
+						"description": "Kullanıcının tüm siparişlerini listeler"
+					},
+					"response": []
+				},
+				{
+					"name": "Sipariş Detayı",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/orders/{{orderId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"{{orderId}}"
+							]
+						},
+						"description": "Belirli bir siparişin detaylarını getirir"
+					},
+					"response": []
+				},
+				{
+					"name": "Sipariş İptal Etme",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/orders/{{orderId}}/cancel",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"{{orderId}}",
+								"cancel"
+							]
+						},
+						"description": "Bir siparişi iptal eder"
+					},
+					"response": []
+				}
+			],
+			"description": "Sipariş işlemleri: sipariş oluşturma, listeleme, detay görüntüleme ve iptal etme"
+		},
+		{
+			"name": "Favori İşlemleri",
+			"item": [
+				{
+					"name": "Favorileri Listeleme",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/favorites",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"favorites"
+							]
+						},
+						"description": "Kullanıcının favori ürünlerini listeler"
+					},
+					"response": []
+				},
+				{
+					"name": "Favorilere Ekleme",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productId\": \"{{productId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/favorites",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"favorites"
+							]
+						},
+						"description": "Bir ürünü favorilere ekler"
+					},
+					"response": []
+				},
+				{
+					"name": "Favorilerden Çıkarma",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/favorites/{{productId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"favorites",
+								"{{productId}}"
+							]
+						},
+						"description": "Bir ürünü favorilerden çıkarır"
+					},
+					"response": []
+				},
+				{
+					"name": "Favori Durumu Kontrolü",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/favorites/{{productId}}/check",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"favorites",
+								"{{productId}}",
+								"check"
+							]
+						},
+						"description": "Bir ürünün favori olup olmadığını kontrol eder"
+					},
+					"response": []
+				}
+			],
+			"description": "Favori ürün işlemleri: ekleme, çıkarma, listeleme ve kontrol etme"
+		},
+		{
+			"name": "Ürün Yönetimi",
+			"item": [
+				{
+					"name": "Ürün Oluşturma",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Yeni Ürün\",\n    \"description\": \"Yeni ürün açıklaması\",\n    \"price\": 199.99,\n    \"category\": \"Elektronik\",\n    \"brand\": \"Test Marka\",\n    \"images\": [\n        \"https://example.com/image1.jpg\",\n        \"https://example.com/image2.jpg\"\n    ],\n    \"seller\": \"Trendyol\",\n    \"stock\": 50,\n    \"discountedPrice\": 179.99,\n    \"subCategory\": \"Akıllı Telefonlar\",\n    \"variants\": [\n        {\n            \"color\": \"Siyah\",\n            \"size\": \"M\",\n            \"stock\": 20,\n            \"additionalPrice\": 0\n        },\n        {\n            \"color\": \"Beyaz\",\n            \"size\": \"L\",\n            \"stock\": 30,\n            \"additionalPrice\": 10\n        }\n    ],\n    \"tags\": [\"elektronik\", \"telefon\", \"akıllı telefon\"],\n    \"specifications\": {\n        \"Ekran\": \"6.1 inç\",\n        \"RAM\": \"8 GB\",\n        \"Depolama\": \"128 GB\"\n    },\n    \"isFeatured\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/management/products",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"management",
+								"products"
+							]
+						},
+						"description": "Yeni bir ürün oluşturur"
+					},
+					"response": []
+				},
+				{
+					"name": "Toplu Ürün Oluşturma",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"products\": [\n        {\n            \"name\": \"Toplu Ürün 1\",\n            \"description\": \"Toplu ürün açıklaması 1\",\n            \"price\": 99.99,\n            \"category\": \"Giyim\",\n            \"brand\": \"Test Marka\",\n            \"images\": [\"https://example.com/image1.jpg\"],\n            \"seller\": \"Trendyol\",\n            \"stock\": 30,\n            \"discountedPrice\": 89.99,\n            \"subCategory\": \"Tişört\",\n            \"variants\": [\n                {\n                    \"color\": \"Kırmızı\",\n                    \"size\": \"M\",\n                    \"stock\": 15,\n                    \"additionalPrice\": 0\n                },\n                {\n                    \"color\": \"Mavi\",\n                    \"size\": \"L\",\n                    \"stock\": 15,\n                    \"additionalPrice\": 5\n                }\n            ],\n            \"tags\": [\"giyim\", \"tişört\", \"yaz\"],\n            \"isFeatured\": false\n        },\n        {\n            \"name\": \"Toplu Ürün 2\",\n            \"description\": \"Toplu ürün açıklaması 2\",\n            \"price\": 149.99,\n            \"category\": \"Ayakkabı\",\n            \"brand\": \"Test Marka 2\",\n            \"images\": [\"https://example.com/image2.jpg\"],\n            \"seller\": \"Trendyol\",\n            \"stock\": 20,\n            \"discountedPrice\": 129.99,\n            \"subCategory\": \"Spor Ayakkabı\",\n            \"variants\": [\n                {\n                    \"color\": \"Siyah\",\n                    \"size\": \"40\",\n                    \"stock\": 7,\n                    \"additionalPrice\": 0\n                },\n                {\n                    \"color\": \"Beyaz\",\n                    \"size\": \"41\",\n                    \"stock\": 7,\n                    \"additionalPrice\": 0\n                },\n                {\n                    \"color\": \"Gri\",\n                    \"size\": \"42\",\n                    \"stock\": 6,\n                    \"additionalPrice\": 10\n                }\n            ],\n            \"tags\": [\"ayakkabı\", \"spor\", \"günlük\"],\n            \"isFeatured\": true\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/management/products/bulk",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"management",
+								"products",
+								"bulk"
+							]
+						},
+						"description": "Birden fazla ürünü toplu olarak oluşturur"
+					},
+					"response": []
+				},
+				{
+					"name": "Ürün Güncelleme",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Güncellenmiş Ürün\",\n    \"price\": 179.99,\n    \"discountedPrice\": 159.99,\n    \"stock\": 40,\n    \"description\": \"Güncellenmiş ürün açıklaması\",\n    \"isFeatured\": true,\n    \"variants\": [\n        {\n            \"color\": \"Siyah\",\n            \"size\": \"M\",\n            \"stock\": 20,\n            \"additionalPrice\": 0\n        },\n        {\n            \"color\": \"Beyaz\",\n            \"size\": \"L\",\n            \"stock\": 20,\n            \"additionalPrice\": 10\n        }\n    ],\n    \"tags\": [\"güncellenmiş\", \"yeni\", \"trend\"]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/management/products/{{productId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"management",
+								"products",
+								"{{productId}}"
+							]
+						},
+						"description": "Var olan bir ürünü günceller"
+					},
+					"response": []
+				},
+				{
+					"name": "Ürün Silme",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/management/products/{{productId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"management",
+								"products",
+								"{{productId}}"
+							]
+						},
+						"description": "Bir ürünü siler"
+					},
+					"response": []
+				},
+				{
+					"name": "Tüm Kategorileri Listeleme",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/management/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"management",
+								"categories"
+							]
+						},
+						"description": "Yönetim için tüm kategorileri listeler"
+					},
+					"response": []
+				},
+				{
+					"name": "Tüm Markaları Listeleme",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/management/brands",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"management",
+								"brands"
+							]
+						},
+						"description": "Yönetim için tüm markaları listeler"
+					},
+					"response": []
+				},
+				{
+					"name": "Kategori Oluşturma",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Yeni Kategori\",\n    \"description\": \"Yeni kategori açıklaması\",\n    \"parentCategory\": null,\n    \"image\": \"https://example.com/category-image.jpg\",\n    \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/management/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"management",
+								"categories"
+							]
+						},
+						"description": "Yeni bir kategori oluşturur"
+					},
+					"response": []
+				},
+				{
+					"name": "Kategori Güncelleme",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Güncellenmiş Kategori\",\n    \"description\": \"Güncellenmiş kategori açıklaması\",\n    \"image\": \"https://example.com/updated-category-image.jpg\",\n    \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/management/categories/{{categoryId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"management",
+								"categories",
+								"{{categoryId}}"
+							]
+						},
+						"description": "Var olan bir kategoriyi günceller"
+					},
+					"response": []
+				},
+				{
+					"name": "Kategori Silme",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/management/categories/{{categoryId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"management",
+								"categories",
+								"{{categoryId}}"
+							]
+						},
+						"description": "Bir kategoriyi siler"
+					},
+					"response": []
+				},
+				{
+					"name": "Kategori Detayı",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/management/categories/{{categoryId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"management",
+								"categories",
+								"{{categoryId}}"
+							]
+						},
+						"description": "Belirli bir kategorinin detaylarını getirir"
+					},
+					"response": []
+				}
+			],
+			"description": "Ürün yönetimi işlemleri: ürün ekleme, güncelleme, silme ve toplu ürün ekleme"
+		},
+		{
+			"name": "Genel",
+			"item": [
+				{
+					"name": "API Durumu",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "API'nin çalışıp çalışmadığını kontrol eder"
+					},
+					"response": []
+				}
+			],
+			"description": "Genel API durumu ve bilgileri"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000",
+			"type": "string"
+		}
+	]
+} 
