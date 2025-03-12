@@ -54,6 +54,9 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Marka zorunludur']
   },
+  brandLogo: {
+    type: String
+  },
   category: {
     type: String,
     required: [true, 'Kategori zorunludur']

@@ -195,7 +195,23 @@ const getCategories = asyncHandler(async (req, res) => {
 // @route   GET /api/products/brands
 // @access  Public
 const getBrands = asyncHandler(async (req, res) => {
-  const brands = await Product.distinct('brand', { isActive: true });
+  // Aktif ürünlerin marka ve logo bilgilerini getir
+  const products = await Product.find({ isActive: true }).select('brand brandLogo');
+  
+  // Marka ve logo bilgilerini birleştir
+  const brandsMap = {};
+  products.forEach(product => {
+    if (product.brand && !brandsMap[product.brand]) {
+      brandsMap[product.brand] = product.brandLogo || '';
+    }
+  });
+  
+  // Marka ve logo bilgilerini dizi olarak formatla
+  const brands = Object.keys(brandsMap).map(brand => ({
+    name: brand,
+    logo: brandsMap[brand]
+  }));
+  
   res.json(brands);
 });
 
